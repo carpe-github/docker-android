@@ -77,6 +77,7 @@ RUN apt-get -qqy update && apt-get -qqy purge python2.7-minimal \
     libvirt-bin \
     bridge-utils \
     python3-pip \
+    xz-utils \
  && apt clean all \
  && rm -rf /var/lib/apt/lists/* \
  && yes | pip3 install numpy \ 
@@ -199,6 +200,16 @@ EXPOSE 4723 6080 5554 5555
 # Add Emulator Devices
 #======================
 COPY devices /root/devices
+
+# ====================
+# Add nodejs 14.17.1
+# ====================
+ARG NODE_VERSION=14.17.1
+RUN wget -nv -O nodejs.tar.xz "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.xz" \
+ && tar -xf nodejs.tar.xz \
+ && mv node-v* nodejs \
+ && ln -s /root/nodejs/bin/node /usr/bin/node \
+ && rm nodejs.tar.xz
 
 #===================
 # Run docker-appium
